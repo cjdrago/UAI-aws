@@ -1,12 +1,9 @@
 # AWS Supply Chain - Data Generator Deployment
 We will be using IaaC (Infraestructure As Code) with AWS Cloud Formation to deploy the solution.
-## Pre-requisites
-You must have the Lambda functions code as zip (*FOLDER*) in a S3 bucket called "**aws-supply-chain-code-{AccountId}**" and the key must be "data_gen_script.zip" (for the data gen function) and "getS3_objects_script.py.zip" (for the object checker).
-
+# Pre-requisites
 ### AWS CloudFormation IAM Role
 You have to create the correct role for CloudFormation to perform the operations when creating your stack
 1. Open 
-
 
 ### Lambda functions code in S3
 #### AWS Console
