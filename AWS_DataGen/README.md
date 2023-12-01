@@ -1,11 +1,21 @@
 # AWS Supply Chain - Data Generator Deployment
 We will be using IaaC (Infraestructure As Code) with AWS Cloud Formation to deploy the solution.
-# Pre-requisites
-### AWS CloudFormation IAM Role
-You have to create the correct role for CloudFormation to perform the operations when creating your stack
-1. Open 
+## Pre-requisites
+You must have the Lambda functions code as zip (*FOLDER*) in a S3 bucket called "**aws-supply-chain-code-{AccountId}**" and the key must be "data_gen_script.zip" (for the data gen function) and "getS3_objects_script.py.zip" (for the object checker). Also, CloudFormation must have the correct IAM role.
 
-### Lambda functions code in S3
+### 1. AWS CloudFormation IAM Role
+You have to create the correct role for CloudFormation to perform the operations when creating your stack
+
+AWS CLI 
+```bash
+aws iam create-role \
+    --role-name CfRole \
+    --assume-role-policy-document ./Cf.json
+
+```
+
+
+### 2. Lambda functions code in S3
 #### AWS Console
 1. Sign in into to your AWS account and open the console.
 2. Go to the Amazon S3 service.
@@ -24,7 +34,7 @@ aws s3 create-bucket --bucket aws-supply-chain-code-{AccountId} --region us-east
 aws s3 cp ~/aws_sc/awssupplychain_samples-main/zip_lambdas s3://aws-supply-chain-code-{AccountId}/ --recursive
 ```
 
-## Deployment 
+# Deployment 
 
 ### Frontend
 To deploy the frontend of the solution, we will be running it locally. 
@@ -40,12 +50,14 @@ npm run dev
 ### Backend
 To deploy the backend of the solution, we will be using IaaC with AWS ClouFormation templates.
 
-1. Download the aws_sc_template.json from available in this repo.
+1. Download the aws_sc_template.json from the /IaaC folder available in this repo.
 2. Sign in into your AWS account and open the console.
 3. Open the AWS CloudFormation Template
 4. Select "Create Stack" -> "With new resources"
 4. Select "Template is ready" and "Upload a template file"
 5. Upload the **aws_sc_template.json**
+7. Click Next
+8. In IAM role, select CfRole, click next until its deploying.
 6. Wait until it says "CREATION_COMPLETE"
 7. Generate your Data!
 
