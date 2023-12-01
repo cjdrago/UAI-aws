@@ -1,0 +1,1727 @@
+{
+  "Description": "(SO0276) - generative-ai-application-builder-on-aws - DeploymentPlatformStack - Version v1.1.1",
+  "Mappings": {
+    "Solution": {
+      "Data": {
+        "SendAnonymousUsageData": "Yes",
+        "ID": "SO0276",
+        "Version": "v1.1.1",
+        "SolutionName": "generative-ai-application-builder-on-aws"
+      }
+    },
+    "FeaturesToDeploy": {
+      "Deploy": {
+        "WebApp": "Yes",
+        "CustomDashboard": "Yes"
+      }
+    },
+    "SourceCode": {
+      "General": {
+        "S3Bucket": "solutions",
+        "KeyPrefix": "generative-ai-application-builder-on-aws/v1.1.1",
+        "SolNamePrefix": "generative-ai-application-builder-on-aws"
+      }
+    }
+  },
+  "Parameters": {
+    "AdminUserEmail": {
+      "Type": "String",
+      "AllowedPattern": "^$|[A-Za-z0-9_!#$%&'*+/=?`{|}~^.-]+@[A-Za-z0-9.-]+$",
+      "ConstraintDescription": "Please provide a valid email",
+      "Description": "Email required to create the default user for the admin platform"
+    }
+  },
+  "Resources": {
+    "DeploymentPlatformSetupAccessLog67D5D503": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "This S3 bucket is used as the access logging bucket for another bucket",
+              "id": "AwsSolutions-S1"
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupAccessLogPolicy2FB262B2": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "DeploymentPlatformSetupAccessLog67D5D503"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "DeploymentPlatformSetupAccessLog67D5D503",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "DeploymentPlatformSetupAccessLog67D5D503",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "DeploymentPlatformSetupInfraSetupCustomResource5473231F": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/asset95f792e343c414de13ca3e995b0e1886aa57103ffe6f23e631a721c3404c1591.zip"
+        },
+        "Description": "A custom resource lambda function to perform operations based on operation type",
+        "Environment": {
+          "Variables": {
+            "POWERTOOLS_SERVICE_NAME": "CUSTOM-RESOURCE",
+            "LOG_LEVEL": "DEBUG",
+            "AWS_SDK_USER_AGENT": "{ \"user_agent_extra\": \"AwsSolution/SO0276/v1.1.1\" }"
+          }
+        },
+        "Handler": "lambda_func.handler",
+        "Layers": [
+          {
+            "Ref": "PythonUserAgentLayer6958F3C0"
+          },
+          {
+            "Ref": "Boto3Layer463A0AEA"
+          }
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.11",
+        "Timeout": 900,
+        "TracingConfig": {
+          "Mode": "Active"
+        }
+      },
+      "DependsOn": [
+        "DeploymentPlatformSetupCustomResourceLambdaRoleDefaultPolicy1B835079",
+        "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D"
+      ],
+      "Metadata": {
+        "aws:asset:path": "asset.95f792e343c414de13ca3e995b0e1886aa57103ffe6f23e631a721c3404c1591",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "DeploymentPlatformSetupInfraSetupScheduledAnonymousMetrics34A8D055": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/asset95f792e343c414de13ca3e995b0e1886aa57103ffe6f23e631a721c3404c1591.zip"
+        },
+        "Description": "A lambda function that runs as per defined schedule to publish metrics",
+        "Environment": {
+          "Variables": {
+            "POWERTOOLS_SERVICE_NAME": "ANONYMOUS-CW-METRICS",
+            "LOG_LEVEL": "DEBUG",
+            "SOLUTION_ID": "SO0276",
+            "SOLUTION_VERSION": "v1.1.1",
+            "REST_API_NAME": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Select": [
+                      1,
+                      {
+                        "Fn::Split": [
+                          "/",
+                          {
+                            "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "-UseCaseManagementAPI"
+                ]
+              ]
+            },
+            "USE_CASE_UUID": {
+              "Fn::GetAtt": [
+                "DeploymentPlatformSetupGenUUIDE08D47F0",
+                "UUID"
+              ]
+            },
+            "AWS_SDK_USER_AGENT": "{ \"user_agent_extra\": \"AwsSolution/SO0276/v1.1.1\" }"
+          }
+        },
+        "Handler": "lambda_ops_metrics.handler",
+        "Layers": [
+          {
+            "Ref": "PythonUserAgentLayer6958F3C0"
+          },
+          {
+            "Ref": "Boto3Layer463A0AEA"
+          }
+        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.11",
+        "Timeout": 900,
+        "TracingConfig": {
+          "Mode": "Active"
+        }
+      },
+      "DependsOn": [
+        "DeploymentPlatformSetupScheduledMetricsLambdaRoleDefaultPolicy7CE81C15",
+        "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F"
+      ],
+      "Metadata": {
+        "aws:asset:path": "asset.95f792e343c414de13ca3e995b0e1886aa57103ffe6f23e631a721c3404c1591",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      },
+      "Condition": "AnonymousDataAWSCondition"
+    },
+    "DeploymentPlatformSetupInfraSetupGetMetricsDataPolicy82387FDA": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "cloudwatch:GetMetricData",
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DeploymentPlatformSetupInfraSetupGetMetricsDataPolicy82387FDA",
+        "Roles": [
+          {
+            "Ref": "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "Lambda requires this permission to read metrics from CloudWatch logs",
+              "id": "AwsSolutions-IAM5"
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupInfraSetupMetricsPublishFrequencyB2020316": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "ScheduleExpression": "rate(1 hour)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "DeploymentPlatformSetupInfraSetupScheduledAnonymousMetrics34A8D055",
+                "Arn"
+              ]
+            },
+            "Id": "Target0"
+          }
+        ]
+      },
+      "Condition": "AnonymousDataAWSCondition"
+    },
+    "DeploymentPlatformSetupInfraSetupMetricsPublishFrequencyAllowEventRuleDeploymentPlatformStackDeploymentPlatformSetupInfraSetupScheduledAnonymousMetricsCE3BF48507FDD1A2": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupInfraSetupScheduledAnonymousMetrics34A8D055",
+            "Arn"
+          ]
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupInfraSetupMetricsPublishFrequencyB2020316",
+            "Arn"
+          ]
+        }
+      },
+      "Condition": "AnonymousDataAWSCondition"
+    },
+    "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": "logs:PutLogEvents",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*:log-stream:*"
+                      ]
+                    ]
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "LambdaFunctionServiceRolePolicy"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "Lambda functions has the required permission to write CloudWatch Logs. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with tighter permissions.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::arn:<AWS::Partition>:logs:<AWS::Region>:<AWS::AccountId>:log-group:/aws/lambda/*"
+              ]
+            },
+            {
+              "reason": "Lambda function has the required permission to write CloudWatch Log streams. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with tighter permissions.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::arn:<AWS::Partition>:logs:<AWS::Region>:<AWS::AccountId>:log-group:/aws/lambda/*:log-stream:*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupCustomResourceLambdaRoleDefaultPolicy1B835079": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTelemetryRecords",
+                "xray:PutTraceSegments"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DeploymentPlatformSetupCustomResourceLambdaRoleDefaultPolicy1B835079",
+        "Roles": [
+          {
+            "Ref": "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "Lambda role policy is configured to read data from S3 bucket",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Action::s3:Abort*",
+                "Action::s3:DeleteObject*",
+                "Resource::<SetupAppConfig016B0097.Arn>/*"
+              ]
+            },
+            {
+              "reason": "The wildcard permission is required to publish events for x-ray insights",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": "logs:PutLogEvents",
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*:log-stream:*"
+                      ]
+                    ]
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "LambdaFunctionServiceRolePolicy"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "Lambda functions has the required permission to write CloudWatch Logs. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with tighter permissions.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::arn:<AWS::Partition>:logs:<AWS::Region>:<AWS::AccountId>:log-group:/aws/lambda/*"
+              ]
+            },
+            {
+              "reason": "Lambda function has the required permission to write CloudWatch Log streams. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with tighter permissions.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::arn:<AWS::Partition>:logs:<AWS::Region>:<AWS::AccountId>:log-group:/aws/lambda/*:log-stream:*"
+              ]
+            },
+            {
+              "reason": "This policy allows get metric data from CloudWatch and has been specified per the AWS documentation.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupScheduledMetricsLambdaRoleDefaultPolicy7CE81C15": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTelemetryRecords",
+                "xray:PutTraceSegments"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DeploymentPlatformSetupScheduledMetricsLambdaRoleDefaultPolicy7CE81C15",
+        "Roles": [
+          {
+            "Ref": "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "The wildcard permission is required to publish events for x-ray insights",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupOpsCustomDashboardC1C0C18E": {
+      "Type": "AWS::CloudWatch::Dashboard",
+      "Properties": {
+        "DashboardBody": {
+          "Fn::Join": [
+            "",
+            [
+              "{\"start\":\"start\",\"end\":\"end\",\"periodOverride\":\"auto\",\"widgets\":[{\"type\":\"metric\",\"width\":6,\"height\":6,\"x\":0,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"REST Endpoint Hits\",\"region\":\"",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\",\"metrics\":[[\"AWS/ApiGateway\",\"Count\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#9467bd\",\"label\":\"Count\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"AWS/ApiGateway\",\"CacheHitCount\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#2ca02c\",\"label\":\"CacheHitCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"AWS/ApiGateway\",\"CacheMissCount\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#d62728\",\"label\":\"CacheMissCount\",\"period\":3600,\"stat\":\"SampleCount\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":6,\"height\":6,\"x\":6,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"REST Endpoint Latency Stats\",\"region\":\"",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\",\"metrics\":[[\"AWS/ApiGateway\",\"Latency\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#ff7f0e\",\"label\":\"AverageLatency\",\"period\":3600}],[\"AWS/ApiGateway\",\"IntegrationLatency\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#1f77b4\",\"label\":\"MaxIntegrationLatency\",\"period\":3600,\"stat\":\"Maximum\"}],[\"AWS/ApiGateway\",\"Latency\",\"ApiName\",\"",
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "-UseCaseManagementAPI\",{\"color\":\"#2ca02c\",\"label\":\"MaxLatency\",\"period\":3600,\"stat\":\"Maximum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":6,\"height\":6,\"x\":12,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Cognito Sign-ins & Sign-ups\",\"region\":\"",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\",\"metrics\":[[\"AWS/Cognito\",\"SignInSuccesses\",\"UserPool\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupNewUserPoolB7DED0A0Ref"
+                ]
+              },
+              "\",\"UserPoolClient\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupAppClientFAA15074Ref"
+                ]
+              },
+              "\",{\"color\":\"#1f77b4\",\"label\":\"SignInSuccessesCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"AWS/Cognito\",\"SignInSuccesses\",\"UserPool\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupNewUserPoolB7DED0A0Ref"
+                ]
+              },
+              "\",\"UserPoolClient\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupAppClientFAA15074Ref"
+                ]
+              },
+              "\",{\"color\":\"#ff7f0e\",\"label\":\"AverageSignInSuccesses\",\"period\":3600}],[\"AWS/Cognito\",\"SignUpSuccesses\",\"UserPool\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupNewUserPoolB7DED0A0Ref"
+                ]
+              },
+              "\",\"UserPoolClient\",\"Admin\",{\"color\":\"#7f7f7f\",\"label\":\"SignUpSuccessesCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"AWS/Cognito\",\"SignUpSuccesses\",\"UserPool\",\"",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupNewUserPoolB7DED0A0Ref"
+                ]
+              },
+              "\",\"UserPoolClient\",\"Admin\",{\"color\":\"#9467bd\",\"label\":\"AverageSignUpSuccesses\",\"period\":3600}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":6,\"height\":6,\"x\":18,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Stack Deployment Status Stats\",\"region\":\"",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\",\"metrics\":[[\"Solution/UseCaseDeployments\",\"UCInitiationSuccess\",\"service\",\"UseCaseManagement\",{\"color\":\"#1f77b4\",\"label\":\"UCInitiationSuccessCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCInitiationFailure\",\"service\",\"UseCaseManagement\",{\"color\":\"#ff7f0e\",\"label\":\"UCInitiationFailureCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCDeletionSuccess\",\"service\",\"UseCaseManagement\",{\"color\":\"#9467bd\",\"label\":\"UCDeletionSuccessCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCDeletionFailure\",\"service\",\"UseCaseManagement\",{\"color\":\"#d62728\",\"label\":\"UCDeletionFailureCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCUpdateSuccess\",\"service\",\"UseCaseManagement\",{\"color\":\"#2ca02c\",\"label\":\"UCUpdateSuccessCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCUpdateFailure\",\"service\",\"UseCaseManagement\",{\"color\":\"#8c564b\",\"label\":\"UCUpdateFailureCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCDescribeSuccess\",\"service\",\"UseCaseManagement\",{\"color\":\"#e377c2\",\"label\":\"UCDescribeSuccessCount\",\"period\":3600,\"stat\":\"SampleCount\"}],[\"Solution/UseCaseDeployments\",\"UCDescribeFailure\",\"service\",\"UseCaseManagement\",{\"color\":\"#7f7f7f\",\"label\":\"UCDescribeFailureCount\",\"period\":3600,\"stat\":\"SampleCount\"}]],\"yAxis\":{}}}]}"
+            ]
+          ]
+        },
+        "DashboardName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-",
+              {
+                "Ref": "AWS::Region"
+              },
+              "-Dashboard"
+            ]
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "Condition": "DeployCustomDashboard"
+    },
+    "DeploymentPlatformSetupWriteToSSMBE1096BE": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ssm:DeleteParameter",
+                "ssm:GetParameter",
+                "ssm:PutParameter"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":ssm:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":parameter/gaab-webconfig/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "DeploymentPlatformSetupWriteToSSMBE1096BE",
+        "Roles": [
+          {
+            "Ref": "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "Permission is required to delete old webconfig ssm parameters",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::arn:<AWS::Partition>:ssm:<AWS::Region>:<AWS::AccountId>:parameter/gaab-webconfig/*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "DeploymentPlatformSetupGenUUIDE08D47F0": {
+      "Type": "Custom::GenUUID",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupInfraSetupCustomResource5473231F",
+            "Arn"
+          ]
+        },
+        "Resource": "GEN_UUID"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "DeploymentPlatformSetupSolutionHelperAnonymousData96B2086D": {
+      "Type": "Custom::AnonymousData",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupInfraSetupCustomResource5473231F",
+            "Arn"
+          ]
+        },
+        "Resource": "ANONYMOUS_METRIC",
+        "SolutionId": "SO0276",
+        "Version": "v1.1.1",
+        "UUID": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupGenUUIDE08D47F0",
+            "UUID"
+          ]
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Condition": "AnonymousDataAWSCondition"
+    },
+    "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "DefaultUserEmail": {
+            "Ref": "AdminUserEmail"
+          },
+          "ApplicationTrademarkName": "Generative AI Application Builder on AWS",
+          "WebConfigSSMKey": {
+            "Fn::Join": [
+              "",
+              [
+                "/gaab-webconfig/",
+                {
+                  "Ref": "AWS::StackName"
+                }
+              ]
+            ]
+          },
+          "CustomResourceLambdaArn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupInfraSetupCustomResource5473231F",
+              "Arn"
+            ]
+          },
+          "CustomResourceRoleArn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D",
+              "Arn"
+            ]
+          },
+          "referencetoDeploymentPlatformStackDeploymentPlatformStorageDeploymentPlatformStorageNestedStackDeploymentPlatformStorageNestedStackResource0080A447OutputsDeploymentPlatformStackDeploymentPlatformStorageUseCasesTable8AE1DCF5Arn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformStorageDeploymentPlatformStorageNestedStackDeploymentPlatformStorageNestedStackResourceF56260D3",
+              "Outputs.DeploymentPlatformStackDeploymentPlatformStorageUseCasesTable8AE1DCF5Arn"
+            ]
+          },
+          "referencetoDeploymentPlatformStackDeploymentPlatformStorageDeploymentPlatformStorageNestedStackDeploymentPlatformStorageNestedStackResource0080A447OutputsDeploymentPlatformStackDeploymentPlatformStorageUseCasesTable8AE1DCF5Ref": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformStorageDeploymentPlatformStorageNestedStackDeploymentPlatformStorageNestedStackResourceF56260D3",
+              "Outputs.DeploymentPlatformStackDeploymentPlatformStorageUseCasesTable8AE1DCF5Ref"
+            ]
+          },
+          "referencetoDeploymentPlatformStackNodeUserAgentLayer24384C79Ref": {
+            "Ref": "NodeUserAgentLayer02526341"
+          },
+          "referencetoDeploymentPlatformStackAwsNodeSdkLayer390CBFFFRef": {
+            "Ref": "AwsNodeSdkLayer42C7A59C"
+          },
+          "referencetoDeploymentPlatformStackRegistrySetup483F1675Arn": {
+            "Fn::GetAtt": [
+              "RegistrySetupCC2515F0",
+              "Arn"
+            ]
+          }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://solutions-reference.s3.",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              "generative-ai-application-builder-on-aws/v1.1.1/DeploymentPlatformStackUseCaseManagementSetupUseCaseManagement4D56BB38.nested.template"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "RegistrySetupCC2515F0"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:asset:path": "DeploymentPlatformStackUseCaseManagementSetupUseCaseManagement4D56BB38.nested.template.json",
+        "aws:asset:property": "TemplateURL"
+      }
+    },
+    "DeploymentPlatformStorageDeploymentPlatformStorageNestedStackDeploymentPlatformStorageNestedStackResourceF56260D3": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "referencetoDeploymentPlatformStackPythonUserAgentLayer6DA2A2CARef": {
+            "Ref": "PythonUserAgentLayer6958F3C0"
+          },
+          "referencetoDeploymentPlatformStackBoto3Layer6439E05DRef": {
+            "Ref": "Boto3Layer463A0AEA"
+          },
+          "referencetoDeploymentPlatformStackRegistrySetup483F1675Arn": {
+            "Fn::GetAtt": [
+              "RegistrySetupCC2515F0",
+              "Arn"
+            ]
+          }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://solutions-reference.s3.",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              "generative-ai-application-builder-on-aws/v1.1.1/DeploymentPlatformStackDeploymentPlatformStorage5B30492E.nested.template"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "RegistrySetupCC2515F0"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:asset:path": "DeploymentPlatformStackDeploymentPlatformStorage5B30492E.nested.template.json",
+        "aws:asset:property": "TemplateURL"
+      }
+    },
+    "WebConfig": {
+      "Type": "Custom::WriteWebConfig",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "DeploymentPlatformSetupInfraSetupCustomResource5473231F",
+            "Arn"
+          ]
+        },
+        "Resource": "WEBCONFIG",
+        "SSMKey": {
+          "Fn::Join": [
+            "",
+            [
+              "/gaab-webconfig/",
+              {
+                "Ref": "AWS::StackName"
+              }
+            ]
+          ]
+        },
+        "ApiEndpoint": {
+          "Fn::Join": [
+            "",
+            [
+              "https://",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorRestEndpointEndPointLambdaRestApiDB0E95B9Ref"
+                ]
+              },
+              ".execute-api.",
+              {
+                "Ref": "AWS::Region"
+              },
+              ".",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              {
+                "Fn::GetAtt": [
+                  "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+                  "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorRestEndpointEndPointLambdaRestApiDeploymentStageprodFA7420DFRef"
+                ]
+              },
+              "/"
+            ]
+          ]
+        },
+        "UserPoolId": {
+          "Fn::GetAtt": [
+            "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+            "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupNewUserPoolB7DED0A0Ref"
+          ]
+        },
+        "UserPoolClientId": {
+          "Fn::GetAtt": [
+            "UseCaseManagementSetupUseCaseManagementNestedStackUseCaseManagementNestedStackResource7ED7E421",
+            "Outputs.DeploymentPlatformStackUseCaseManagementSetupUseCaseManagementRequestProcessorDeploymentPlatformCognitoSetupAppClientFAA15074Ref"
+          ]
+        },
+        "IsInternalUser": {
+          "Fn::If": [
+            "IsInternalUserCondition",
+            true,
+            false
+          ]
+        },
+        "ModelProviders": {
+          "HuggingFace": {
+            "SupportedModels": [
+              "google/flan-t5-xxl",
+              "google/flan-t5-xl",
+              "google/flan-t5-large",
+              "google/flan-t5-base",
+              "google/flan-t5-small"
+            ],
+            "AllowsStreaming": false,
+            "ModelProviderParams": {
+              "ChatPromptTemplate": "{history}\n\n{input}",
+              "RAGPromptTemplate": "References:\n{context}\n\nCarefully read the reference passages above and try to truthfully answer the Human's question. If the answer is not explicitly contained within the references, respond with \"Sorry I don't know\". It is very important that you respond \"Sorry I don't know\" if the answer is not found within the references above. Do not make use of any information outside of the references. Try to be brief and write a response in no more than 5 complete sentences.\n\nCurrent conversation:\n{history}\n\nHuman: {input}\nAI:",
+              "DefaultTemperature": 1,
+              "MinTemperature": 0,
+              "MaxTemperature": 100
+            }
+          },
+          "Anthropic": {
+            "SupportedModels": [
+              "claude-instant-1",
+              "claude-1",
+              "claude-2"
+            ],
+            "AllowsStreaming": true,
+            "ModelProviderParams": {
+              "ChatPromptTemplate": "\n\nHuman: You are a friendly AI assistant that is helpful, honest, and harmless.\n\nHere is the current conversation:\n{history}\n\n{input}\n\nAssistant:",
+              "RAGPromptTemplate": "\n\nHuman: You are a friendly AI assistant. You provide answers only based on the provided reference passages.\n\nHere are reference passages in <references></references> tags:\n<references>\n{context}\n</references>\n\nCarefully read the references above and thoughtfully answer the question below. If the answer can not be extracted from the references, then respond with \"Sorry I don't know\". It is very important that you only use information found within the references to answer. Try to be brief in your response.\n\nHere is the current chat history:\n{history}\n\nQuestion: {input}\n\nAssistant:",
+              "DefaultTemperature": 1,
+              "MinTemperature": 0,
+              "MaxTemperature": 1
+            }
+          },
+          "Bedrock": {
+            "SupportedModels": [
+              "ai21.j2-ultra",
+              "ai21.j2-mid",
+              "amazon.titan-text-express-v1",
+              "anthropic.claude-v1",
+              "anthropic.claude-v2",
+              "anthropic.claude-instant-v1"
+            ],
+            "AllowsStreaming": true,
+            "ModelFamilyParams": {
+              "amazon": {
+                "ChatPromptTemplate": "{history}\n\n{input}",
+                "RAGPromptTemplate": "Instructions: You are an AI Assistant created to help answer the User's question. You are only to answer the User's question using the provided references. You are not allowed to make things up or use your own knowledge. Only use what is provided between the <references> XML tags.\n\nHere are the only references you can use:\n<references>\n{context}\n</references>\n\nGiven the references provided above, answer the User's question. If the answer is not explicitly in the provided references, respond with \"Sorry, I don't know\". It is very important that you say \"Sorry, I don't know\" if the answer isn't in the references. Take your time, think step by step, and do not make anything up.\n\n{history}\nUser: {input}\nBot:",
+                "DefaultTemperature": 1,
+                "MinTemperature": 0,
+                "MaxTemperature": 1
+              },
+              "anthropic": {
+                "ChatPromptTemplate": "\n\nHuman: You are a friendly AI assistant that is helpful, honest, and harmless.\n\nHere is the current conversation:\n{history}\n\n{input}\n\nAssistant:",
+                "RAGPromptTemplate": "\n\nHuman: You are a friendly AI assistant. You provide answers only based on the provided reference passages.\n\nHere are reference passages in <references></references> tags:\n<references>\n{context}\n</references>\n\nCarefully read the references above and thoughtfully answer the question below. If the answer can not be extracted from the references, then respond with \"Sorry I don't know\". It is very important that you only use information found within the references to answer. Try to be brief in your response.\n\nHere is the current chat history:\n{history}\n\nQuestion: {input}\n\nAssistant:",
+                "DefaultTemperature": 1,
+                "MinTemperature": 0,
+                "MaxTemperature": 1
+              },
+              "ai21": {
+                "ChatPromptTemplate": "{history}\n\n{input}",
+                "RAGPromptTemplate": "References:\n{context}\n\nCarefully read the reference passages above and try to truthfully answer the Human's question. If the answer is not explicitly contained within the references, respond with \"Sorry I don't know\". It is very important that you respond \"Sorry I don't know\" if the answer is not found within the references above. Do not make use of any information outside of the references. Try to be brief and write a response in no more than 5 complete sentences.\n\nCurrent conversation:\n{history}\n\nHuman: {input}\nAI:",
+                "DefaultTemperature": 1,
+                "MinTemperature": 0,
+                "MaxTemperature": 1
+              }
+            }
+          }
+        },
+        "KnowledgeBaseParams": {
+          "kendra": {
+            "AvailableEditions": [
+              "DEVELOPER_EDITION",
+              "ENTERPRISE_EDITION"
+            ],
+            "DefaultEdition": "DEVELOPER_EDITION",
+            "DefaultNewKendraIndexName": "GAABKnowledgeBaseIndex",
+            "DefaultQueryCapacityUnits": 0,
+            "DefaultStorageCapacityUnits": 0,
+            "MaxQueryCapacityUnits": 1,
+            "MaxStorageCapacityUnits": 5,
+            "DefaultNumberOfDocs": 2,
+            "MaxNumberOfDocs": 5,
+            "MinNumberOfDocs": 1
+          }
+        }
+      },
+      "DependsOn": [
+        "DeploymentPlatformSetupWriteToSSMBE1096BE"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "WebAppS3UINestedStackS3UINestedStackResource19E82599": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "WebConfigKey": {
+            "Fn::Join": [
+              "",
+              [
+                "/gaab-webconfig/",
+                {
+                  "Ref": "AWS::StackName"
+                }
+              ]
+            ]
+          },
+          "CustomResourceLambdaArn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupInfraSetupCustomResource5473231F",
+              "Arn"
+            ]
+          },
+          "CustomResourceRoleArn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D",
+              "Arn"
+            ]
+          },
+          "AccessLoggingBucketArn": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupAccessLog67D5D503",
+              "Arn"
+            ]
+          },
+          "UseCaseUUID": {
+            "Fn::GetAtt": [
+              "DeploymentPlatformSetupGenUUIDE08D47F0",
+              "UUID"
+            ]
+          },
+          "referencetoDeploymentPlatformStackRegistrySetup483F1675Arn": {
+            "Fn::GetAtt": [
+              "RegistrySetupCC2515F0",
+              "Arn"
+            ]
+          }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://solutions-reference.s3.",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              "generative-ai-application-builder-on-aws/v1.1.1/DeploymentPlatformStackWebAppS3UI37249B06.nested.template"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "DeploymentPlatformSetupAccessLogPolicy2FB262B2",
+        "RegistrySetupCC2515F0",
+        "WebConfig"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:asset:path": "DeploymentPlatformStackWebAppS3UI37249B06.nested.template.json",
+        "aws:asset:property": "TemplateURL"
+      },
+      "Condition": "DeployWebApp"
+    },
+    "RegistrySetupCC2515F0": {
+      "Type": "AWS::ServiceCatalogAppRegistry::Application",
+      "Properties": {
+        "Description": "Service Catalog application to track and manage all your resources for the solution generative-ai-application-builder-on-aws",
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              "App-GAAB-Dashboard-",
+              {
+                "Ref": "AWS::StackName"
+              }
+            ]
+          ]
+        },
+        "Tags": {
+          "Solutions:ApplicationType": "AWS-Solutions",
+          "Solutions:SolutionID": "SO0276",
+          "Solutions:SolutionName": "generative-ai-application-builder-on-aws",
+          "Solutions:SolutionVersion": "v1.1.1"
+        }
+      }
+    },
+    "AppRegistryAssociation": {
+      "Type": "AWS::ServiceCatalogAppRegistry::ResourceAssociation",
+      "Properties": {
+        "Application": {
+          "Fn::GetAtt": [
+            "RegistrySetupCC2515F0",
+            "Id"
+          ]
+        },
+        "Resource": {
+          "Ref": "AWS::StackId"
+        },
+        "ResourceType": "CFN_STACK"
+      }
+    },
+    "AppAttributesC4C8180E": {
+      "Type": "AWS::ServiceCatalogAppRegistry::AttributeGroup",
+      "Properties": {
+        "Attributes": {
+          "applicationType": "AWS-Solutions",
+          "version": "v1.1.1",
+          "solutionID": "SO0276",
+          "solutionName": "generative-ai-application-builder-on-aws"
+        },
+        "Description": "Attributes for Solutions Metadata",
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              "AttrGrp-",
+              {
+                "Ref": "AWS::StackName"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "AppAttributesApplicationAttributeGroupAssociation5d45ed99601285052111": {
+      "Type": "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation",
+      "Properties": {
+        "Application": {
+          "Fn::GetAtt": [
+            "RegistrySetupCC2515F0",
+            "Id"
+          ]
+        },
+        "AttributeGroup": {
+          "Fn::GetAtt": [
+            "AppAttributesC4C8180E",
+            "Id"
+          ]
+        }
+      }
+    },
+    "CustomMetricsPolicyFE11102D": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "cloudwatch:PutMetricData",
+              "Condition": {
+                "StringEquals": {
+                  "cloudwatch:namespace": [
+                    "AWS/ApiGateway",
+                    "AWS/Kendra",
+                    "AWS/Cognito",
+                    "Langchain/LLM"
+                  ]
+                }
+              },
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "CustomMetricsPolicyFE11102D",
+        "Roles": [
+          {
+            "Ref": "DeploymentPlatformSetupCustomResourceLambdaRole3C444A9D"
+          },
+          {
+            "Ref": "DeploymentPlatformSetupScheduledMetricsLambdaRole89420F9F"
+          }
+        ]
+      },
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "reason": "This policy allows put metric data to CloudWatch. The policy is restricted using policy conditions.",
+              "id": "AwsSolutions-IAM5",
+              "applies_to": [
+                "Resource::*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PythonUserAgentLayer6958F3C0": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "python3.8",
+          "python3.9",
+          "python3.10",
+          "python3.11"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/asset732f8e7b3069de66cc07613c1cb4b11e03f1d24ffd437d455f4ef43901946396.zip"
+        },
+        "Description": "This layer configures AWS Python SDK initialization to send user-agent information"
+      },
+      "Metadata": {
+        "aws:asset:path": "asset.732f8e7b3069de66cc07613c1cb4b11e03f1d24ffd437d455f4ef43901946396",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Content"
+      }
+    },
+    "Boto3Layer463A0AEA": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "python3.8",
+          "python3.9",
+          "python3.10",
+          "python3.11"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/asset8a86142a62521ca025ce7e5cc3442f5ca67f5de2a3699d42f1bfc6671b3bcfe5.zip"
+        },
+        "Description": "Boto3 layer to be bundled with python lambda functions"
+      },
+      "Metadata": {
+        "aws:asset:path": "asset.8a86142a62521ca025ce7e5cc3442f5ca67f5de2a3699d42f1bfc6671b3bcfe5",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Content"
+      }
+    },
+    "NodeUserAgentLayer02526341": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs18.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/assetdb3439fed24f99f71cce3a35d226114017ca870ae4e18a0f5c953877a282a330.zip"
+        },
+        "Description": "This layer configures AWS Node SDK initialization to send user-agent information"
+      },
+      "Metadata": {
+        "aws:asset:path": "asset.db3439fed24f99f71cce3a35d226114017ca870ae4e18a0f5c953877a282a330",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Content"
+      }
+    },
+    "AwsNodeSdkLayer42C7A59C": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs18.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "generative-ai-application-builder-on-aws/v1.1.1/assete1edc74af7124a7bd874201e6aa5cddbe7a62ecd4f6a4d7dc2672fe29407f9a4.zip"
+        },
+        "Description": "AWS Javascript SDK v3 to be bundled with lambda functions as a layer"
+      },
+      "Metadata": {
+        "aws:asset:path": "asset.e1edc74af7124a7bd874201e6aa5cddbe7a62ecd4f6a4d7dc2672fe29407f9a4",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Content"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VRy27CMBD8Fu6OaQqqyq081F6oimjVa7VxtmBI7Mi7BiEr/14bwqOqesnszI73kb2XYTSSIe/BnjJVbrNKFzK8M6itmH6bV2gabVYpXICDGhmdiNavQAMZJl5tkVOyi06wsJVWh6vc8ROZAGErKqiLEmR49kaxtiaZb+MFuloTJTaHA7pPdNSlbnkraPAFRMgkxwmEhlqG6wBdtLQVJpqwFbhDEx+Epe9Un1RVWV/ugdVahhnQurDgypS+kNgN3U4rVMBQ2VX8Nw5XmtgdZIjGcdPEbnDeYYlkvVMYB7NKX+Qxs9OFZ3xx1jd/lRt724rjVvEcq3SFc0Ux9cS2vtJrsxRPrSn1ud3llG+eG8+tyDOomjXIu95Td/N+wn9X6+zhdrvfE8cxh8NzPbKVT55YOX7YecV0bHA6eVYeDNS2LOT8yD/s7CjMJq0wtkS5of4uf5T5g8x7G9I6c96wrlEuT/gDiJRhbLECAAA="
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "AnonymousDataAWSCondition": {
+      "Fn::Equals": [
+        {
+          "Fn::FindInMap": [
+            "Solution",
+            "Data",
+            "SendAnonymousUsageData"
+          ]
+        },
+        "Yes"
+      ]
+    },
+    "IsInternalUserCondition": {
+      "Fn::Equals": [
+        {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::Split": [
+                ".",
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "@",
+                        {
+                          "Ref": "AdminUserEmail"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "amazon"
+      ]
+    },
+    "DeployCustomDashboard": {
+      "Fn::Equals": [
+        {
+          "Fn::FindInMap": [
+            "FeaturesToDeploy",
+            "Deploy",
+            "CustomDashboard"
+          ]
+        },
+        "Yes"
+      ]
+    },
+    "DeployWebApp": {
+      "Fn::Equals": [
+        {
+          "Fn::FindInMap": [
+            "FeaturesToDeploy",
+            "Deploy",
+            "WebApp"
+          ]
+        },
+        "Yes"
+      ]
+    },
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Outputs": {
+    "WebConfigKey": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "/gaab-webconfig/",
+            {
+              "Ref": "AWS::StackName"
+            }
+          ]
+        ]
+      }
+    },
+    "CloudFrontWebUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "WebAppS3UINestedStackS3UINestedStackResource19E82599",
+                "Outputs.DeploymentPlatformStackWebAppS3UIWebsiteUICloudFrontDistributionEEA22BE9DomainName"
+              ]
+            }
+          ]
+        ]
+      },
+      "Condition": "DeployWebApp"
+    }
+  }
+}

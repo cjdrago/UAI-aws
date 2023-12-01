@@ -1,0 +1,27 @@
+
+{
+ "Version": "2012-10-17",
+ "Statement": [
+   {
+     "Sid": "KendraPermissions",
+     "Effect": "Allow",
+     "Action": [
+       "kendra:*"
+     ],
+     "Resource": "*"
+   },
+   {
+     "Sid": "S3Permissions",
+     "Effect": "Allow",
+     "Action": [
+       "s3:GetObject",
+       "s3:ListBucket"
+     ],
+     "Resource": [
+       "arn:aws:s3:::aws-supply-chain-context-{AccountId}",
+       "arn:aws:s3:::aws-supply-chain-context-{AccountId}/*"
+     ]
+   }
+ ]
+}
+
