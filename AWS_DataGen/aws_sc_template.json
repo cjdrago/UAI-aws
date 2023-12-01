@@ -1,0 +1,389 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation sample template",
+  "Resources": {
+    "S3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "proyecto-uai-iaac"
+      }
+    },
+    "S3PutObjectRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "S3_PutPolicy_iaac",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "VisualEditor0",
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:CreateBucket"],
+                  "Resource": "arn:aws:s3:::proyecto-uai-iaac/*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "RoleName": "S3_PutObject_Role_IaaC"
+      },
+      "DependsOn": ["S3Bucket"]
+    },
+    "S3ListObjectsRoleIaaC": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "S3_PutPolicy_iaac",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "VisualEditor0",
+                  "Effect": "Allow",
+                  "Action": "s3:ListBucket",
+                  "Resource": "arn:aws:s3:::proyecto-uai-iaac"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "RoleName": "S3ListObjectsRoleIaaC"
+      },
+      "DependsOn": ["S3Bucket"]
+    },
+    "LambdaGetS3objectsIaaC": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "lambda_function.py",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/S3ListObjectsRoleIaaC"
+        },
+        "Code": {
+          "S3Bucket": "aws-supply-chain-code",
+          "S3Key": "getS3_objects_script.py.zip"
+        },
+        "Runtime": "python3.9",
+        "Timeout": 900,
+        "FunctionName": "LambdaGetS3objectsIaaC"
+      },
+
+      "DependsOn": ["S3ListObjectsRoleIaaC"]
+    },
+    "LambdaGenDataIaaC": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "lambda_function.py",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/S3_PutObject_Role_IaaC"
+        },
+        "Code": {
+          "S3Bucket": "aws-supply-chain-code",
+          "S3Key": "data_gen_script.zip"
+        },
+        "Runtime": "python3.9",
+        "Timeout": 900,
+        "FunctionName": "LambdaGenDataIaaC"
+      },
+      "DependsOn": ["S3PutObjectRole"]
+    },
+     "AwsSupplyChainAPI": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "AWS SC dataGen API",
+        "Description": "API used for Creating data and checking its creation",
+        "FailOnWarnings": true
+      }
+    },
+
+    "LambdaPermissionGenData": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": { "Fn::GetAtt": ["LambdaGenDataIaaC", "Arn"] },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              { "Ref": "AWS::Region" },
+              ":",
+              { "Ref": "AWS::AccountId" },
+              ":",
+              { "Ref": "AwsSupplyChainAPI" },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+
+    "LambdaPermissionCheckData": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["LambdaGetS3objectsIaaC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:execute-api:",
+              { "Ref": "AWS::Region" },
+              ":",
+              { "Ref": "AWS::AccountId" },
+              ":",
+              { "Ref": "AwsSupplyChainAPI" },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+
+    "ApiGatewayCloudWatchLogsRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": { "Service": ["apigateway.amazonaws.com"] },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "ApiGatewayLogsPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:DescribeLogGroups",
+                    "logs:DescribeLogStreams",
+                    "logs:PutLogEvents",
+                    "logs:GetLogEvents",
+                    "logs:FilterLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "ApiGatewayAccount": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": ["ApiGatewayCloudWatchLogsRole", "Arn"]
+        }
+      }
+    },
+
+    "AwsSupplyChainAPIStage": {
+      "DependsOn": ["ApiGatewayAccount"],
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "DeploymentId": { "Ref": "ApiDeployment" },
+        "MethodSettings": [
+          {
+            "DataTraceEnabled": true,
+            "HttpMethod": "*",
+            "LoggingLevel": "INFO",
+            "ResourcePath": "/*"
+          }
+        ],
+        "RestApiId": { "Ref": "AwsSupplyChainAPI" },
+        "StageName": "LATEST"
+      }
+    },
+
+    "ApiDeployment": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "DependsOn": ["DataGenRequest"],
+      "Properties": {
+        "RestApiId": { "Ref": "AwsSupplyChainAPI" },
+        "StageName": "DummyStage"
+      }
+    },
+
+    "DataGenResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": { "Ref": "AwsSupplyChainAPI" },
+        "ParentId": { "Fn::GetAtt": ["AwsSupplyChainAPI", "RootResourceId"] },
+        "PathPart": "scDataGen"
+      }
+    },
+
+    "DataGenRequest": {
+      "DependsOn": "LambdaPermissionGenData",
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                { "Ref": "AWS::Region" },
+                ":lambda:path/2015-03-31/functions/",
+                { "Fn::GetAtt": ["LambdaGenDataIaaC", "Arn"] },
+                "/invocations"
+              ]
+            ]
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": 200
+            }
+          ],
+          "RequestTemplates": {
+            "application/json": {
+              "Fn::Join": [
+                "",
+                ["{", "  \"name\": \"$input.params('name')\"", "}"]
+              ]
+            }
+          }
+        },
+        "RequestParameters": {
+          "method.request.querystring.name": false
+        },
+        "ResourceId": { "Ref": "DataGenResource" },
+        "RestApiId": { "Ref": "AwsSupplyChainAPI" },
+        "MethodResponses": [
+          {
+            "StatusCode": 200
+          }
+        ]
+      }
+    },
+    "CheckDataRequest": {
+        "DependsOn": "LambdaPermissionGenData",
+        "Type": "AWS::ApiGateway::Method",
+        "Properties": {
+          "AuthorizationType": "NONE",
+          "HttpMethod": "POST",
+          "Integration": {
+            "Type": "AWS",
+            "IntegrationHttpMethod": "POST",
+            "Uri": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:apigateway:",
+                  { "Ref": "AWS::Region" },
+                  ":lambda:path/2015-03-31/functions/",
+                  { "Fn::GetAtt": ["LambdaGetS3objectsIaaC", "Arn"] },
+                  "/invocations"
+                ]
+              ]
+            },
+            "IntegrationResponses": [
+              {
+                "StatusCode": 200
+              }
+            ],
+            "RequestTemplates": {
+              "application/json": {
+                "Fn::Join": [
+                  "",
+                  ["{", "  \"name\": \"$input.params('name')\"", "}"]
+                ]
+              }
+            }
+          },
+          "RequestParameters": {
+            "method.request.querystring.name": false
+          },
+          "ResourceId": { "Ref": "DataGenResource" },
+          "RestApiId": { "Ref": "AwsSupplyChainAPI" },
+          "MethodResponses": [
+            {
+              "StatusCode": 200
+            }
+          ]
+        }
+      }
+    
+  }
+}
