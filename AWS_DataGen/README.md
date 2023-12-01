@@ -43,7 +43,7 @@ npm run dev
 ### Backend
 To deploy the backend of the solution, we will be using IaaC with AWS ClouFormation templates.
 
-1. Download the aws_sc_template.json from the /IaaC folder available in this repo.
+1. Download the aws_sc_template.json from available in this repo.
 2. Sign in into your AWS account and open the console.
 3. Open the AWS CloudFormation Template
 4. Select "Create Stack" -> "With new resources"
