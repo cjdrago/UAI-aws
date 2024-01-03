@@ -1,0 +1,479 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "BedrockRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "BedrockLLM",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "bedrock:InvokeModel",
+                  "Resource": [
+                    { "Fn::Sub":"arn:aws:bedrock:*:${AWS::AccountId}:provisioned-model/*"},
+                    "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2",
+                    { "Fn::Sub":"arn:aws:bedrock:us-east-1:${AWS::AccountId}:guardrail/*"}
+                    
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "RoleName": "Lambda_Bedrock_InvokeModel"
+      }
+    },
+
+    "LambdaGenDataRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "BucketPermission",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "VisualEditor0",
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:CreateBucket"],
+                  "Resource": "arn:aws:s3:::aws-sc-data-${AWS::AccountId}/*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "RoleName": "Lambda_DataGenS3"
+      },
+      "DependsOn": ["AwsSCBucket"]
+    },
+    "MasterDataGenLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "lambda_function.lambda_handler",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/Lambda_DataGenS3"
+        },
+        "Layers": [
+          "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39:12"
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Ref": "CodeBucket"
+          },
+          "S3Key": "aws-sc-master-data-gen.zip"
+        },
+        "Runtime": "python3.9",
+        "Timeout": 900,
+        "FunctionName": "AWS_SC_MasterData_gen"
+      },
+      "DependsOn": ["LambdaGenDataRole"]
+    },
+    "TransactionalDataGenLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "lambda_function.lambda_handler",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/Lambda_DataGenS3"
+        },
+        "Layers": [
+          "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39:12"
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Ref": "CodeBucket"
+          },
+          "S3Key": "aws-sc-transactional-data-gen.zip"
+        },
+        "Runtime": "python3.9",
+        "Timeout": 900,
+        "FunctionName": "AWS_SC_TransactionalData_gen"
+      },
+      "DependsOn": ["LambdaGenDataRole"]
+    },
+    "AwsSCBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "-",
+            [
+              "aws-sc-data",
+              {
+                "Ref": "AWS::AccountId"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "StatesExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  {
+                    "Fn::Sub": "states.${AWS::Region}.amazonaws.com"
+                  }
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "StatesExecutionPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["lambda:InvokeFunction"],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "StepFunction": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "StateMachineName": "AWS-SC-StepFunction",
+        "StateMachineType": "STANDARD",
+        "Definition": {
+          "Comment": "AWS Step Function to generate data",
+          "StartAt": "Bedrock_MasterData",
+          "States": {
+            "Bedrock_MasterData": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "OutputPath": "$.Payload",
+              "Parameters": {
+                "FunctionName": {
+                  "Fn::Sub": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:AWS_SC_Bedrock:$LATEST"
+                },
+                "Payload.$": "$"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException",
+                    "Lambda.TooManyRequestsException"
+                  ],
+                  "IntervalSeconds": 1,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "Next": "MasterData_Gen"
+            },
+            "MasterData_Gen": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "OutputPath": "$.Payload",
+              "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": {
+                  "Fn::Sub": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:AWS_SC_MasterData_gen:$LATEST"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException",
+                    "Lambda.TooManyRequestsException"
+                  ],
+                  "IntervalSeconds": 1,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "Next": "TransactionalData_Gen"
+            },
+            "TransactionalData_Gen": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "OutputPath": "$.Payload",
+              "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": {
+                  "Fn::Sub": "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:AWS_SC_TransactionalData_gen:$LATEST"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException",
+                    "Lambda.TooManyRequestsException"
+                  ],
+                  "IntervalSeconds": 1,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        "RoleArn": {
+          "Fn::GetAtt": ["StatesExecutionRole", "Arn"]
+        }
+      },
+      "DependsOn": [
+        "StatesExecutionRole",
+        "TransactionalDataGenLambda",
+        "MasterDataGenLambda",
+        "BedrockLambda"
+      ]
+    },
+    "BedrockLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "lambda_function.lambda_handler",
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/Lambda_Bedrock_InvokeModel"
+        },
+        "Layers": [
+          {
+            "Ref": "Boto3Layer"
+          }
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Ref": "CodeBucket"
+          },
+          "S3Key": "aws-sc-bedrock.zip"
+        },
+        "Runtime": "python3.9",
+        "Timeout": 600,
+        "FunctionName": "AWS_SC_Bedrock"
+      },
+      "DependsOn": ["BedrockRole"]
+    },
+    "APIGatewayToStateMachine": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["apigateway.amazonaws.com", "lambda.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "CloudWatchLogs",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:DescribeLogGroups",
+                    "logs:DescribeLogStreams",
+                    "logs:PutLogEvents",
+                    "logs:GetLogEvents",
+                    "logs:FilterLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "StatesRole",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "states:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "RoleName": "APIGateway-StepFunctions"
+      }
+    },
+    "APIGatewayAPI": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "aws-sc-api"
+      },
+      "DependsOn": ["StepFunction"]
+    },
+
+    "APIGatewayResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "APIGatewayAPI"
+        },
+        "ParentId": {
+          "Fn::GetAtt": ["APIGatewayAPI", "RootResourceId"]
+        },
+        "PathPart": "StepFunction"
+      },
+      "DependsOn": ["APIGatewayAPI"]
+    },
+    "APIGatewayMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "APIGatewayAPI"
+        },
+        "ResourceId": {
+          "Ref": "APIGatewayResource"
+        },
+        "HttpMethod": "POST",
+        "AuthorizationType": "NONE",
+        "MethodResponses": [
+          {
+            "StatusCode": 200
+          }
+        ],
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationResponses": [
+            {
+              "StatusCode": 200
+            }
+          ],
+          "IntegrationHttpMethod": "POST",
+          "Credentials": {
+            "Fn::GetAtt": ["APIGatewayToStateMachine", "Arn"]
+          },
+          "Uri": {
+            "Fn::Sub": [
+              "arn:aws:apigateway:${AWS::Region}:states:path/${StateMachineNameArn}",
+              {
+                "StateMachineNameArn": {
+                  "Fn::GetAtt": ["StepFunction", "Arn"]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "DependsOn": ["APIGatewayResource", "StepFunction"]
+    },
+    "APIGatewayDeployment": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "APIGatewayAPI"
+        },
+        "StageName": "Implementation"
+      },
+      "DependsOn": ["APIGatewayMethod"]
+    },
+    "Boto3Layer": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "LayerName": "boto3-bedrock",
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "aws-sc-layers-${AWS::AccountId}"
+          },
+          "S3Key": "python.zip"
+        },
+        "CompatibleRuntimes": ["python3.9"]
+      }
+    }
+  },
+  "Parameters": {
+    "CodeBucket": {
+      "Type": "String",
+      "Default": "aws-sc-code"
+    }
+  }
+}
