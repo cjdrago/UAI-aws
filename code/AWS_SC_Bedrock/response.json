@@ -1,0 +1,604 @@
+{
+  "statusCode": 200,
+  "body": {
+    "country": "Chile",
+    "industry": "Wine",
+    "products": [
+      {
+        "name": "Do\u00f1a Dominga Carmenere",
+        "catagory": "red",
+        "description": "Full-bodied red wine with flavors of blackberry and spice",
+        "company": "Vina Santa Dominga",
+        "price": "8000",
+        "unit": "750 ml bottle",
+        "id": "abc123",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 125,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 150,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 175,
+            "planned_lead_time": 17,
+            "planned_lead_time_dev": 5,
+            "planned_lead_time_mean": 12
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 200,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 225,
+            "planned_lead_time": 24,
+            "planned_lead_time_dev": 7,
+            "planned_lead_time_mean": 18
+          }
+        ]
+      },
+      {
+        "name": "Cono Sur Sauvignon Blanc",
+        "category": "white",
+        "description": "Crisp, refreshing white wine with notes of grapefruit and lemon",
+        "company": "Cono Sur",
+        "price": "5000",
+        "unit": "750 ml bottle",
+        "id": "def456",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 125,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 150,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 14
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 175,
+            "planned_lead_time": 17,
+            "planned_lead_time_dev": 5,
+            "planned_lead_time_mean": 17
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 200,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 21
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 225,
+            "planned_lead_time": 24,
+            "planned_lead_time_dev": 7,
+            "planned_lead_time_mean": 24
+          }
+        ]
+      },
+      {
+        "name": "Emiliana G\u00ea Pinot Noir",
+        "catagory": "red",
+        "description": "Elegant red wine with aromas of cherry and vanilla",
+        "company": "Emiliana",
+        "price": "12000",
+        "unit": "750 ml bottle",
+        "id": "ghijkl",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 17,
+            "planned_lead_time_dev": 5,
+            "planned_lead_time_mean": 12
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 24,
+            "planned_lead_time_dev": 7,
+            "planned_lead_time_mean": 17
+          }
+        ]
+      },
+      {
+        "name": "Casa Silva Los Lingues Cabernet Sauvignon",
+        "catagory": "red",
+        "description": "Full-bodied Cabernet with flavors of blackcurrant and oak",
+        "company": "Casa Silva",
+        "price": "15000",
+        "unit": "750 ml bottle",
+        "id": "mnopqr",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 17,
+            "planned_lead_time_dev": 5,
+            "planned_lead_time_mean": 12
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 24,
+            "planned_lead_time_dev": 7,
+            "planned_lead_time_mean": 17
+          }
+        ]
+      },
+      {
+        "name": "Santa Rita 120 Cabernet Sauvignon",
+        "catagory": "red",
+        "description": "Bold, complex Cabernet with notes of cassis and tobacco",
+        "company": "Santa Rita",
+        "price": "20000",
+        "unit": "750 ml bottle",
+        "id": "stuvwx",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 28,
+            "planned_lead_time_dev": 8,
+            "planned_lead_time_mean": 20
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 35,
+            "planned_lead_time_dev": 10,
+            "planned_lead_time_mean": 25
+          }
+        ]
+      },
+      {
+        "name": "Undurraga T.H. Sparkling Wine",
+        "catagory": "sparkling",
+        "description": "Crisp, dry sparkling wine with apple and citrus notes",
+        "company": "Undurraga",
+        "price": "10000",
+        "unit": "750 ml bottle",
+        "id": "yzabcd",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 28,
+            "planned_lead_time_dev": 8,
+            "planned_lead_time_mean": 20
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 35,
+            "planned_lead_time_dev": 10,
+            "planned_lead_time_mean": 25
+          }
+        ]
+      },
+      {
+        "name": "Miguel Torres Santa Digna Ros\u00e9",
+        "catagory": "ros\u00e9",
+        "description": "Dry, elegant ros\u00e9 with strawberry and floral aromas",
+        "company": "Miguel Torres",
+        "price": "7000",
+        "unit": "750 ml bottle",
+        "id": "efghij",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 30,
+            "max_safety_stock": 60,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 20,
+            "max_safety_stock": 40,
+            "planned_lead_time": 5,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 3
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 10,
+            "max_safety_stock": 20,
+            "planned_lead_time": 3,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 2
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 40,
+            "max_safety_stock": 80,
+            "planned_lead_time": 8,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 25,
+            "max_safety_stock": 50,
+            "planned_lead_time": 6,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 4
+          }
+        ]
+      },
+      {
+        "name": "Montes Alpha Carmen\u00e8re",
+        "catagory": "red",
+        "description": "Full-bodied Carmen\u00e8re with rich dark fruit flavors",
+        "company": "Montes",
+        "price": "18000",
+        "unit": "750 ml bottle",
+        "id": "klmnop",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "chile003",
+            "min_safety_stock": 10,
+            "max_safety_stock": 20,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "chile004",
+            "min_safety_stock": 15,
+            "max_safety_stock": 25,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "chile005",
+            "min_safety_stock": 20,
+            "max_safety_stock": 30,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "chile006",
+            "min_safety_stock": 25,
+            "max_safety_stock": 35,
+            "planned_lead_time": 17,
+            "planned_lead_time_dev": 5,
+            "planned_lead_time_mean": 12
+          },
+          {
+            "location_id": "chile007",
+            "min_safety_stock": 30,
+            "max_safety_stock": 40,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "chile008",
+            "min_safety_stock": 35,
+            "max_safety_stock": 45,
+            "planned_lead_time": 24,
+            "planned_lead_time_dev": 7,
+            "planned_lead_time_mean": 18
+          }
+        ]
+      }
+    ],
+    "locations": [
+      {
+        "address": "Avenida Central 345",
+        "city": "Santiago",
+        "id": "chile001",
+        "latitude": "-33.456789",
+        "longitude": "-70.123456",
+        "time_zone": "America/Santiago",
+        "postal_code": "12345",
+        "phone_number": "56223456789",
+        "country_code": "CL",
+        "state_prov": "Santiago Metropolitan Region",
+        "main": true,
+        "tpartner": false
+      },
+      {
+        "address": "Calle Maip\u00fa 567",
+        "city": "Valpara\u00edso",
+        "id": "chile002",
+        "latitude": "-33.047256",
+        "longitude": "-71.614729",
+        "time_zone": "America/Santiago",
+        "postal_code": "67890",
+        "phone_number": "56223456788",
+        "country_code": "CL",
+        "state_prov": "Valpara\u00edso Region",
+        "main": false,
+        "tpartner": true
+      },
+      {
+        "address": "Avenida Libertador 123",
+        "city": "Vi\u00f1a del Mar",
+        "id": "chile003",
+        "latitude": "-33.032322",
+        "longitude": "-71.554345",
+        "time_zone": "America/Santiago",
+        "postal_code": "13579",
+        "phone_number": "56223456787",
+        "country_code": "CL",
+        "state_prov": "Valpara\u00edso Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle Constituci\u00f3n 789",
+        "city": "Concepci\u00f3n",
+        "id": "chile004",
+        "latitude": "-36.825611",
+        "longitude": "-73.050122",
+        "time_zone": "America/Santiago",
+        "postal_code": "24680",
+        "phone_number": "56223456786",
+        "country_code": "CL",
+        "state_prov": "Biob\u00edo Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Avenida O'Higgins 456",
+        "city": "Rancagua",
+        "id": "chile005",
+        "latitude": "-34.166668",
+        "longitude": "-70.733335",
+        "time_zone": "America/Santiago",
+        "postal_code": "34567",
+        "phone_number": "56223456785",
+        "country_code": "CL",
+        "state_prov": "O'Higgins Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Pasaje Los Alerces 123",
+        "city": "Puerto Montt",
+        "id": "chile006",
+        "latitude": "-41.467778",
+        "longitude": "-72.952222",
+        "time_zone": "America/Santiago",
+        "postal_code": "56789",
+        "phone_number": "56223456784",
+        "country_code": "CL",
+        "state_prov": "Los Lagos Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Avenida Arturo Prat 789",
+        "city": "Iquique",
+        "id": "chile007",
+        "latitude": "-20.213056",
+        "longitude": "-70.151528",
+        "time_zone": "America/Santiago",
+        "postal_code": "01234",
+        "phone_number": "56223456783",
+        "country_code": "CL",
+        "state_prov": "Tarapac\u00e1 Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle Bilbao 345",
+        "city": "Punta Arenas",
+        "id": "chile008",
+        "latitude": "-53.163889",
+        "longitude": "-70.917778",
+        "time_zone": "America/Santiago",
+        "postal_code": "56123",
+        "phone_number": "56223456782",
+        "country_code": "CL",
+        "state_prov": "Magallanes Region",
+        "main": false,
+        "tpartner": false
+      }
+    ],
+    "datetime": "2023/12/14/10:52:34"
+  }
+}

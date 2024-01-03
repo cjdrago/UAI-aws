@@ -1,0 +1,27 @@
+{
+  "products": {
+    "prompt": [
+      "Context: {0} industry in {1}. The answer must be a json in one line: <response>[json]</response>. \n Mention 8 products. Json properties: name, catagory (one word), description, company (fake), price (in {1}), unit of measure, id (6 characters), currency ({1} currency)."
+    ]
+  },
+  "locations": {
+    "prompt": [
+      "Context: {0} industry in {1}. The answer must be a json in one line: <response>[json]</response>. \n Give me 8 locations in {1}. Json properities: address (street and number), city (name), id (8 characters), latitude (string), longitude (string), time_zone, postal_code (address postal code), phone_number, country_code ({1} ISO Alpha-2 code), state_prov, main (set to true only for one location, for the others must be set to false), tpartner (set to true only for one location different than the mian one, for the others must be set to false)."
+    ],
+
+    "example": [
+      "Context: Retail industry in Chile. The answer must be a json in one line: <response>[json]</response>. \n  Give me 8 locations in Chile. Json properities: address (street and number), city (name), id (8 characters), latitude (string), longitude (string), time_zone, postal_code (address postal code), phone_number, country_code (Chile ISO Alpha-2 code), state_prov, main (set to true only for one location, for the others must be set to false), tpartner (set to true only for one location different than the mian one, for the others must be set to false)."
+    ]
+  },
+  "policies": {
+    "prompt": [
+      "Context: {0} industry in {1}, '{2}' product with price of {3} {4}. The answer must be a json in one line: <response>[json]</response>.\n Generate an inventory policy and vendor lead time for '{2}' product in 6 different sales locations (location_id: {5}). Json properties: location_id, min_safety_stock (unit of  measure of '{6}' ), max_safety_stock (unit of  measure of '{6}' ), planned_lead_time (in days), planned_lead_time_dev (in days), planned_lead_time_mean (in days)."
+    ],
+    "example": [
+      "Context: Retail industry in Chile, 'Leche descremada' product with price of 1500 CLP. \n Generate an inventory policy and vendor lead time for 'Leche descremada' product in 6 different sales locations (location_id: efgh5678,mnop4567,qrst8901,uvwx1234,yzab6789,abcd5678), return it as json array with the following properties: location_id, min_safety_stock (unit of  measure of 'L' ), max_safety_stock (unit of  measure of 'L' ), planned_lead_time (in days), planned_lead_time_dev (in days), planned_lead_time_mean (in days). \n  The answer must be: <response>[json]</response>"
+    ]
+  },
+  "test": {
+    "prompt": ["Hola. Cómo estás?"]
+  }
+}
