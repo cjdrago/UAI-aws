@@ -1,0 +1,26 @@
+{
+  "statusCode": 200,
+  "body": {
+    "products": [
+      "abc123",
+      "def456",
+      "ghi789",
+      "jkl012",
+      "mno345",
+      "pqr678",
+      "stu901",
+      "vwx234"
+    ],
+    "sites": [
+      "mnop1234",
+      "ijkl5678",
+      "cdef7890",
+      "ghi32578",
+      "pqr94268",
+      "stu15975"
+    ],
+    "datetime": "2023/12/14/10:52:34",
+    "country": "Chile",
+    "industry": "Wine"
+  }
+}

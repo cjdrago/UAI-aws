@@ -1,0 +1,11 @@
+{
+    "product_list" : "GENERATED WITH BEDROCK", 
+    "sales_location" : "GENERATED WITH BEDROCK",
+    "partner_id" : ["1"],
+    "company" : ["ACPG"],
+    "order_type" :["PO"],
+    "region" : ["SCN_RESERVED_NO_VALUE_PROVIDED"],
+    "product_group" : ["SCN_RESERVED_NO_VALUE_PROVIDED"],
+    "vendorMatrix2" : {"tpartner_id": ["1"], "supplier_description": ["Mark LLC"]},
+    "vendorMatrix" : ""
+}
