@@ -1,0 +1,604 @@
+{
+  "statusCode": 200,
+  "body": {
+    "datetime": "2023/12/14/10:52:34",
+    "country": "Chile",
+    "industry": "Wine",
+    "products": [
+      {
+        "name": "Cabernet Sauvignon",
+        "category": "Red",
+        "description": "A full-bodied red wine with flavors of black currant, cedar, and tobacco",
+        "company": "Vina Morande",
+        "price": 2500,
+        "unit": "750 ml",
+        "id": "abc123",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 100,
+            "max_safety_stock": 150,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 12
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 80,
+            "max_safety_stock": 120,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 8
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 90,
+            "max_safety_stock": 130,
+            "planned_lead_time": 12,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 70,
+            "max_safety_stock": 110,
+            "planned_lead_time": 8,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 6
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 85,
+            "max_safety_stock": 125,
+            "planned_lead_time": 11,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 9
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 95,
+            "max_safety_stock": 135,
+            "planned_lead_time": 13,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 11
+          }
+        ]
+      },
+      {
+        "name": "Sauvignon Blanc",
+        "category": "White",
+        "description": "A crisp, dry white wine with aromas of grapefruit and green pepper",
+        "company": "Vina Errazuriz",
+        "price": 1500,
+        "unit": "750 ml",
+        "id": "def456",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 28,
+            "planned_lead_time_dev": 8,
+            "planned_lead_time_mean": 20
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 35,
+            "planned_lead_time_dev": 10,
+            "planned_lead_time_mean": 25
+          }
+        ]
+      },
+      {
+        "name": "Syrah",
+        "category": "Red",
+        "description": "A bold, spicy red wine with black fruit flavors and subtle smoky notes",
+        "company": "Vina Santa Rita",
+        "price": 3000,
+        "unit": "750 ml",
+        "id": "ghi789",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 120,
+            "max_safety_stock": 240,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 80,
+            "max_safety_stock": 160,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 35,
+            "max_safety_stock": 70,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 25,
+            "max_safety_stock": 50,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 15,
+            "max_safety_stock": 30,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 10
+          }
+        ]
+      },
+      {
+        "name": "Chardonnay",
+        "category": "White",
+        "description": "An elegant white wine with flavors of butter, oak, and tropical fruit",
+        "company": "Vina Undurraga",
+        "price": 2000,
+        "unit": "750 ml",
+        "id": "jkl012",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 75,
+            "max_safety_stock": 125,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 150,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 60,
+            "max_safety_stock": 110,
+            "planned_lead_time": 5,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 3
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 80,
+            "max_safety_stock": 130,
+            "planned_lead_time": 12,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 9
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 90,
+            "max_safety_stock": 140,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 7
+          }
+        ]
+      },
+      {
+        "name": "Pinot Noir",
+        "category": "Red",
+        "description": "A light-bodied red wine with cherry, strawberry, and earthy flavors",
+        "company": "Vina Casablanca",
+        "price": 3500,
+        "unit": "750 ml",
+        "id": "mno345",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 200,
+            "max_safety_stock": 400,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 5,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 3
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 4,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 2
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 3,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 2
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 25,
+            "max_safety_stock": 50,
+            "planned_lead_time": 2,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 1
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 10,
+            "max_safety_stock": 20,
+            "planned_lead_time": 1,
+            "planned_lead_time_dev": 0,
+            "planned_lead_time_mean": 1
+          }
+        ]
+      },
+      {
+        "name": "Carmenere",
+        "category": "Red",
+        "description": "A medium-bodied red wine with spicy plum and pepper flavors",
+        "company": "Vina Montes",
+        "price": 1800,
+        "unit": "750 ml",
+        "id": "pqr678",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 28,
+            "planned_lead_time_dev": 8,
+            "planned_lead_time_mean": 20
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 35,
+            "planned_lead_time_dev": 10,
+            "planned_lead_time_mean": 25
+          }
+        ]
+      },
+      {
+        "name": "Merlot",
+        "category": "Red",
+        "description": "A smooth, easy-drinking red wine with cherry and mocha notes",
+        "company": "Vina Maipo",
+        "price": 1200,
+        "unit": "750 ml",
+        "id": "stu901",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 120,
+            "max_safety_stock": 180,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 80,
+            "max_safety_stock": 120,
+            "planned_lead_time": 5,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 4
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 150,
+            "planned_lead_time": 6,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 4
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 90,
+            "max_safety_stock": 130,
+            "planned_lead_time": 6,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 4
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 70,
+            "max_safety_stock": 100,
+            "planned_lead_time": 4,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 3
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 60,
+            "max_safety_stock": 90,
+            "planned_lead_time": 4,
+            "planned_lead_time_dev": 1,
+            "planned_lead_time_mean": 3
+          }
+        ]
+      },
+      {
+        "name": "Malbec",
+        "category": "Red",
+        "description": "A robust red wine with flavors of plum, cocoa, and pepper",
+        "company": "Vina Santa Carolina",
+        "price": 1300,
+        "unit": "750 ml",
+        "id": "vwx234",
+        "currency": "CLP",
+        "policies": [
+          {
+            "location_id": "mnop1234",
+            "min_safety_stock": 50,
+            "max_safety_stock": 100,
+            "planned_lead_time": 7,
+            "planned_lead_time_dev": 2,
+            "planned_lead_time_mean": 5
+          },
+          {
+            "location_id": "ijkl5678",
+            "min_safety_stock": 75,
+            "max_safety_stock": 150,
+            "planned_lead_time": 10,
+            "planned_lead_time_dev": 3,
+            "planned_lead_time_mean": 7
+          },
+          {
+            "location_id": "cdef7890",
+            "min_safety_stock": 100,
+            "max_safety_stock": 200,
+            "planned_lead_time": 14,
+            "planned_lead_time_dev": 4,
+            "planned_lead_time_mean": 10
+          },
+          {
+            "location_id": "ghi32578",
+            "min_safety_stock": 125,
+            "max_safety_stock": 250,
+            "planned_lead_time": 21,
+            "planned_lead_time_dev": 6,
+            "planned_lead_time_mean": 15
+          },
+          {
+            "location_id": "pqr94268",
+            "min_safety_stock": 150,
+            "max_safety_stock": 300,
+            "planned_lead_time": 28,
+            "planned_lead_time_dev": 8,
+            "planned_lead_time_mean": 20
+          },
+          {
+            "location_id": "stu15975",
+            "min_safety_stock": 175,
+            "max_safety_stock": 350,
+            "planned_lead_time": 35,
+            "planned_lead_time_dev": 10,
+            "planned_lead_time_mean": 25
+          }
+        ]
+      }
+    ],
+    "locations": [
+      {
+        "address": "Calle 1 #123",
+        "city": "Santiago",
+        "id": "abcd1234",
+        "latitude": "-33.456789",
+        "longitude": "-70.654321",
+        "time_zone": "America/Santiago",
+        "postal_code": "123456",
+        "phone_number": "5623456789",
+        "country_code": "CL",
+        "state_prov": "Santiago Metropolitan Region",
+        "main": true,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 2 #456",
+        "city": "Valparaiso",
+        "id": "wxyz6789",
+        "latitude": "-33.159357",
+        "longitude": "-71.627052",
+        "time_zone": "America/Santiago",
+        "postal_code": "456789",
+        "phone_number": "5698765432",
+        "country_code": "CL",
+        "state_prov": "Valpara\u00edso Region",
+        "main": false,
+        "tpartner": true
+      },
+      {
+        "address": "Calle 3 #789",
+        "city": "Vi\u00f1a del Mar",
+        "id": "mnop1234",
+        "latitude": "-33.032282",
+        "longitude": "-71.553567",
+        "time_zone": "America/Santiago",
+        "postal_code": "789012",
+        "phone_number": "5624681357",
+        "country_code": "CL",
+        "state_prov": "Valpara\u00edso Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 4 #159",
+        "city": "Concepci\u00f3n",
+        "id": "ijkl5678",
+        "latitude": "-36.826738",
+        "longitude": "-73.053256",
+        "time_zone": "America/Santiago",
+        "postal_code": "159753",
+        "phone_number": "5649738521",
+        "country_code": "CL",
+        "state_prov": "B\u00edo B\u00edo Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 5 #357",
+        "city": "La Serena",
+        "id": "cdef7890",
+        "latitude": "-29.904505",
+        "longitude": "-71.251874",
+        "time_zone": "America/Santiago",
+        "postal_code": "357246",
+        "phone_number": "5651846237",
+        "country_code": "CL",
+        "state_prov": "Coquimbo Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 6 #951",
+        "city": "Puerto Montt",
+        "id": "ghi32578",
+        "latitude": "-41.468343",
+        "longitude": "-72.948029",
+        "time_zone": "America/Santiago",
+        "postal_code": "951837",
+        "phone_number": "5693852741",
+        "country_code": "CL",
+        "state_prov": "Los Lagos Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 7 #636",
+        "city": "Coyhaique",
+        "id": "pqr94268",
+        "latitude": "-45.575153",
+        "longitude": "-72.071492",
+        "time_zone": "America/Santiago",
+        "postal_code": "636294",
+        "phone_number": "5628471659",
+        "country_code": "CL",
+        "state_prov": "Ais\u00e9n Region",
+        "main": false,
+        "tpartner": false
+      },
+      {
+        "address": "Calle 8 #741",
+        "city": "Punta Arenas",
+        "id": "stu15975",
+        "latitude": "-53.155075",
+        "longitude": "-70.911689",
+        "time_zone": "America/Santiago",
+        "postal_code": "741985",
+        "phone_number": "5621543987",
+        "country_code": "CL",
+        "state_prov": "Magallanes Region",
+        "main": false,
+        "tpartner": false
+      }
+    ]
+  }
+}

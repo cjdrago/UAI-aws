@@ -1,0 +1,96 @@
+Point to think:
+  This approach allow to have different transportation policy for the same product and two sites,
+  therefore it is note a recprocous relation between the sites:
+      - Being able to send product Z from site X to site Y, does not necessarly mean 
+      that i am allowed to send product Z from site Y to site X
+
+{
+  "from_site_efgh5678": [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 1, 0, 1, 1, 0, 0, 0],
+    [1, 1, 1, 1, 1, 0, 1, 1],
+    [1, 1, 0, 0, 1, 1, 0, 0],
+    [1, 0, 0, 0, 1, 0, 0, 0]
+  ],
+  "from_site_mnop4567": [
+    [0, 1, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 1, 1],
+    [1, 0, 0, 1, 0, 0, 0, 1]
+  ],
+  "from_site_qrst8901": [
+    [0, 1, 0, 1, 1, 1, 0, 1],
+    [0, 1, 1, 0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 0, 0, 1, 1]
+  ],
+  "from_site_uvwx1234": [
+    [1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 0, 1],
+    [0, 0, 1, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 1, 0, 1, 0, 1, 0, 0]
+  ],
+  "from_site_yzab6789": [
+    [1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 0, 1, 1, 0],
+    [0, 0, 1, 0, 1, 0, 0, 0],
+    [0, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 0, 1, 0, 0]
+  ],
+  "from_site_abcd5678": [
+    [1, 0, 1, 1, 0, 0, 0, 0],
+    [0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 0, 1, 0, 1, 1],
+    [1, 1, 0, 1, 0, 0, 1, 1],
+    [0, 1, 1, 0, 1, 1, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0]
+  ]
+}
+
+
+
+#################################
+----------- Example -------------
+#################################
+
+POLICY == 0 -> NOT ALLOWED TO SEND
+
+from_site     to_site       product
+efgh5678      efgh5678      abc123
+efgh5678      efgh5678      def456
+efgh5678      efgh5678      ghi789
+efgh5678      efgh5678      jkl012
+efgh5678      efgh5678      mno345
+efgh5678      efgh5678      pqr678
+efgh5678      efgh5678      stu901
+efgh5678      efgh5678      vwx234
+efgh5678      mnop4567      abc123
+efgh5678      mnop4567      def456
+efgh5678      mnop4567      ghi789
+efgh5678      mnop4567      pqr678
+efgh5678      mnop4567      vwx234
+efgh5678      qrst8901      ghi789
+efgh5678      qrst8901      mno345
+efgh5678      qrst8901      pqr678
+efgh5678      qrst8901      vwx234
+efgh5678      uvwx1234      def456
+efgh5678      uvwx1234      mno345
+efgh5678      uvwx1234      pqr678
+efgh5678      uvwx1234      stu901
+efgh5678      yzab6789      abc123
+efgh5678      yzab6789      jkl012
+efgh5678      yzab6789      stu901
+efgh5678      abcd5678      abc123
+efgh5678      abcd5678      ghi789
+efgh5678      abcd5678      jkl012
+efgh5678      abcd5678      mno345
+efgh5678      abcd5678      stu901
+efgh5678      abcd5678      vwx234
